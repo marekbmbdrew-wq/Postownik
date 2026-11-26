@@ -26,8 +26,32 @@ jobs:
           gradle-version: '8.9'
 
       - name: Extract Android project
+        run: unzip Postownik-wersja-instalacyjna-projekt.zip -d source
+
+      - name: Fix Gradle configuration
         run: |
-          unzip Postownik-wersja-instalacyjna-projekt.zip -d source
+          cat > source/app/build.gradle.kts <<'EOF'
+          plugins {
+              id("com.android.application")
+              id("org.jetbrains.kotlin.android")
+          }
+
+          android {
+              namespace = "pl.postownik.app"
+              compileSdk = 35
+              defaultConfig {
+                  applicationId = "pl.postownik.app"
+                  minSdk = 26
+                  targetSdk = 35
+                  versionCode = 1
+                  versionName = "1.0"
+              }
+          }
+
+          dependencies {
+              implementation("androidx.core:core-ktx:1.15.0")
+          }
+          EOF
 
       - name: Build APK
         working-directory: source
@@ -38,3 +62,4 @@ jobs:
         with:
           name: Postownik-APK
           path: source/app/build/outputs/apk/debug/app-debug.apk
+
