@@ -1,5 +1,4 @@
 
-
 name: Build Postownik APK
 
 on:
@@ -63,6 +62,10 @@ jobs:
               implementation("androidx.core:core-ktx:1.15.0")
           }
           EOF
+
+      - name: Fix missing BroadcastReceiver import
+        run: |
+          sed -i '/import android.content.Context/a import android.content.BroadcastReceiver' source/app/src/main/java/pl/postownik/app/MainActivity.kt
 
       - name: Build APK
         working-directory: source
