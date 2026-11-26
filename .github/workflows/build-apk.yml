@@ -9,6 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -24,12 +25,16 @@ jobs:
         with:
           gradle-version: '8.9'
 
+      - name: Extract Android project
+        run: |
+          unzip Postownik-wersja-instalacyjna-projekt.zip -d source
+
       - name: Build APK
+        working-directory: source
         run: gradle assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: Postownik-APK
-          path: app/build/outputs/apk/debug/app-debug.apk
-          
+          path: source/app/build/outputs/apk/debug/app-debug.apk
